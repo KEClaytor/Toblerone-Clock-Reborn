@@ -58,3 +58,15 @@ def extended(a=1):
             ys.append(y)
 
     return (x0, y0, xs, ys)
+
+
+def shift(values, shift):
+    px_per_row = [0, 19, 21, 23, 23, 21, 19]
+    px_cumsum = np.cumsum(np.array(px_per_row))
+    new_values = []
+    for v in values:
+        row = np.where(v < px_cumsum)[0][0]
+        v2 = v + shift
+        if px_cumsum[row-1] <= v2 < px_cumsum[row]:
+            new_values.append(v2)
+    return new_values

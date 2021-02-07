@@ -35,7 +35,7 @@ def clock(h, m, s):
     for ii in core.shift(digits[m_tens], 2):
         colors[ii] = "orange"
         selected[ii] = True
-    for ii in core.shift(digits[m_ones], 12):
+    for ii in core.shift(digits[m_ones], 10):
         colors[ii] = "orange"
         selected[ii] = True
 

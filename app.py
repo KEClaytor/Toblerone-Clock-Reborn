@@ -22,6 +22,7 @@ ys = np.array(ys)
 selected = np.zeros(x0.shape, dtype=bool)
 
 # UI elements - Character designer
+char_button = Button(label="Reset")
 char_text = TextInput(value="[]", title="Selected Index:")
 
 # UI elements - Color picker
@@ -36,6 +37,7 @@ p.patches(xs="xs", ys="ys", fill_color="colors", source=source)
 
 # Reset the array
 def reset(event):
+    selected[:] = False
     colors = np.array([""] * len(x0), dtype=object)
     colors[:] = "black"
     source.data["colors"] = colors.tolist()
@@ -64,11 +66,12 @@ def callback(event):
 
 
 p.on_event(Tap, callback)
+char_button.on_click(reset)
 color_button.on_click(reset)
 
 ui = column([char_text])
 
-layout_char = column([char_text])
+layout_char = column([char_button, char_text])
 tab_char_designer = Panel(child=layout_char, title="Index Designer")
 
 layout_color = column([color_button, color_text, color_picker])

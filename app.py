@@ -7,6 +7,7 @@ from bokeh.models import TextInput, ColorPicker, Button
 from bokeh.io import curdoc
 from bokeh.layouts import column
 from bokeh.events import DoubleTap, Tap
+from bokeh.palettes import Turbo256
 
 import numpy as np
 
@@ -78,6 +79,18 @@ def clock():
         source.data["colors"] = colors.tolist()
 
 
+rainbow_index = 0
+def rainbow():
+    global rainbow_index
+    if tabs.active == 3:
+        colors = np.array(["black"] * 126, dtype=object)
+        for shift in range(-6, 18, 2):
+            c = Turbo256[(rainbow_index * 2 + shift * 10) % 256]
+            for ii in core.shift(characters.diagonal, shift):
+                colors[ii] = c
+        source.data["colors"] = colors.tolist()
+        rainbow_index += 1
+
 p.on_event(Tap, callback)
 char_button.on_click(reset)
 color_button.on_click(reset)
@@ -92,9 +105,12 @@ tab_color_designer = Panel(child=layout_color, title="Color Designer")
 
 tab_timer_demo = Panel(child=column([]), title="Clock Demo")
 
-tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo])
+tab_rainbow = Panel(child=column([]), title="Rainbow")
+
+tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_rainbow])
 
 layout = column([tabs, p])
 
 curdoc().add_periodic_callback(clock, 100)
+curdoc().add_periodic_callback(rainbow, 100)
 curdoc().add_root(layout)

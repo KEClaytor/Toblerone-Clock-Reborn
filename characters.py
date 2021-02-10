@@ -18,6 +18,8 @@ digits = {
 hour_index = [1, 0, 20, 19, 41, 40, 63, 64, 86, 87, 107, 108,
 17, 18, 38, 39, 61, 62, 85, 84, 106, 105, 125, 124]
 
+diagonal = [6, 7, 25, 26, 46, 47, 68, 69, 89, 90, 108, 109]
+
 
 def clock(h, m, s):
     selected = np.zeros((126,), dtype=bool)
@@ -27,7 +29,8 @@ def clock(h, m, s):
     for ii, indx in enumerate(hour_index):
         if ii <= h:
             colors[indx] = "green"
-            selected[indx] = True
+    # Prevent second dots from entering hour triangles
+    selected[hour_index] = True
     
     # Minutes - numbers in the middle
     m_tens = m // 10

@@ -1,9 +1,10 @@
+import random
 import datetime
 
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.models import Panel, Tabs
-from bokeh.models import TextInput, ColorPicker, Button
+from bokeh.models import TextInput, ColorPicker, Button, RadioButtonGroup
 from bokeh.io import curdoc
 from bokeh.layouts import column
 from bokeh.events import DoubleTap, Tap
@@ -33,6 +34,9 @@ char_text = TextInput(value="[]", title="Selected Index:")
 color_button = Button(label="Reset")
 color_text = TextInput(value="[]", title="Colors:")
 color_picker = ColorPicker(title="Color")
+
+# UI elements - Animation page
+animation_radio = RadioButtonGroup(labels=["rainbow", "raindrops", "chevrons"], active=0)
 
 # Plot
 p = figure(plot_width=600, plot_height=400, x_range=(-6, 6), y_range=(-4, 4),)
@@ -80,22 +84,43 @@ def clock():
 
 
 rainbow_index = 0
+raindrops = [(0, 0, 0), (-2, -2, 3), (2, 2, 5)]
 def rainbow():
-    global rainbow_index
     if tabs.active == 3:
-        colors = np.array(["black"] * 126, dtype=object)
-        for shift in range(-6, 18, 2):
-            c = Turbo256[(rainbow_index * 2 + shift * 10) % 256]
-            for ii in core.shift(characters.diagonal, shift):
-                colors[ii] = c
-        source.data["colors"] = colors.tolist()
-        rainbow_index += 1
+        if animation_radio.active == 0:
+            # RAINBOW
+            global rainbow_index
+            colors = np.array(["black"] * 126, dtype=object)
+            for shift in range(-6, 18, 2):
+                c = Turbo256[(rainbow_index * 2 + shift * 10) % 256]
+                for ii in core.shift(characters.diagonal, shift):
+                    colors[ii] = c
+            source.data["colors"] = colors.tolist()
+            rainbow_index += 1
+        elif animation_radio.active == 1:
+            # RAINDROPS
+            global raindrops
+            # Update radius
+            raindrops = [(x, y, r + 0.5) for (x, y, r) in raindrops]
+            # Update plot
+            colors = characters.ripple(x0, y0, 215, raindrops)
+            source.data["colors"] = colors
+            # Cull large raindrops
+            raindrops = [r for r in raindrops if r[2] < 14]
+            # Add new raindrops
+            if len(raindrops) < 3:
+                x = random.uniform(-6, 6)
+                y = random.uniform(-2.5, 2.5)
+                r = 0
+                raindrops.append((x, y, r))
+            pass
+        elif animation_radio.active == 2:
+            # CHEVRONS
+            pass
 
 p.on_event(Tap, callback)
 char_button.on_click(reset)
 color_button.on_click(reset)
-
-ui = column([char_text])
 
 layout_char = column([char_button, char_text])
 tab_char_designer = Panel(child=layout_char, title="Index Designer")
@@ -105,9 +130,9 @@ tab_color_designer = Panel(child=layout_color, title="Color Designer")
 
 tab_timer_demo = Panel(child=column([]), title="Clock Demo")
 
-tab_rainbow = Panel(child=column([]), title="Rainbow")
+tab_animation = Panel(child=column([animation_radio]), title="Animations")
 
-tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_rainbow])
+tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation])
 
 layout = column([tabs, p])
 

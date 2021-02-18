@@ -1,5 +1,7 @@
 import numpy as np
 
+from bokeh.colors import HSL
+
 import core
 
 digits = {
@@ -50,3 +52,24 @@ def clock(h, m, s):
         selected[indx] = True
 
     return colors
+
+
+def ripple(x0, y0, hue, ripples):
+    """Create a wave-like ripple pattern
+    x0, y0 are the coordinates of the triangle centers (numpy arrays)
+    hue is the ripple hue
+    ripples is a (x, y, r) tuple of the ripple center (x, y) and radius (r)
+    """
+    colors = [HSL(hue, 1, 0)] * len(x0)
+    for x, y, r in ripples:
+        for ii, (xi, yi) in enumerate(zip(x0, y0)):
+            ri = np.sqrt((xi - x)**2 + (yi - y)**2)
+            delta_r = 2 - np.abs(r - ri)
+            # Fall off to zero at a range of 2 from the ripple radius
+            #     /\         /\
+            #    /  \       /  \
+            # __/    \__|__/    \__
+            if delta_r < 0:
+                delta_r = 0
+            colors[ii] = colors[ii].lighten(delta_r * 0.15)
+    return [c.to_rgb().to_hex() for c in colors]

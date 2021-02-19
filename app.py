@@ -4,16 +4,17 @@ import datetime
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.models import Panel, Tabs
-from bokeh.models import TextInput, ColorPicker, Button, RadioButtonGroup
+from bokeh.models import TextInput, ColorPicker, Button, RadioButtonGroup, Select
 from bokeh.io import curdoc
 from bokeh.layouts import column
-from bokeh.events import DoubleTap, Tap
+from bokeh.events import Tap
 from bokeh.palettes import Turbo256
 
 import numpy as np
 
 import core
 import characters
+import pride
 
 # Data
 (x0, y0, xs, ys) = core.extended()
@@ -37,6 +38,9 @@ color_picker = ColorPicker(title="Color")
 
 # UI elements - Animation page
 animation_radio = RadioButtonGroup(labels=["rainbow", "raindrops", "chevrons"], active=0)
+
+# UI elements - Pride page
+pride_select = Select(title="Flag", options=list(pride.flags.keys()))
 
 # Plot
 p = figure(plot_width=600, plot_height=400, x_range=(-6, 6), y_range=(-4, 4),)
@@ -70,6 +74,12 @@ def callback(event):
     elif tabs.active == 2:
         # ==== Clock Mode ====
         # Update from clock()
+        pass
+    elif tabs.active == 4:
+        # ==== Animations ====
+        pass
+    elif tabs.active == 5:
+        # ==== Pride Flags ====
         pass
     # We have to replace the data to refresh the plot
     # There may be a more efficient "patch" method, but it's not working for me
@@ -118,9 +128,16 @@ def rainbow():
             # CHEVRONS
             pass
 
+
+def set_flag(attr, old, new):
+    colors = pride.flag(pride_select.value)
+    source.data["colors"] = colors.tolist()
+
+
 p.on_event(Tap, callback)
 char_button.on_click(reset)
 color_button.on_click(reset)
+pride_select.on_change('value', set_flag)
 
 layout_char = column([char_button, char_text])
 tab_char_designer = Panel(child=layout_char, title="Index Designer")
@@ -132,7 +149,9 @@ tab_timer_demo = Panel(child=column([]), title="Clock Demo")
 
 tab_animation = Panel(child=column([animation_radio]), title="Animations")
 
-tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation])
+tab_pride = Panel(child=column([pride_select]), title="Pride Flags")
+
+tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], max_width=1200)
 
 layout = column([tabs, p])
 

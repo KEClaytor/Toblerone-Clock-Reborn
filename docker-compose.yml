@@ -1,0 +1,10 @@
+# Run with `docker-compose up --build -d` to rebuild and detach
+version: "3"
+
+services:
+  application:
+    image: tclock/app
+    # Allow the container to access the hardware
+    privileged: true
+    ports:
+      - 80:80

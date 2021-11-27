@@ -13,10 +13,51 @@ Pixel numbering scheme:
 
 ![Numbering](images/numbering.png)
 
+## Hardware
+
+Wiring diagram (the pins tied together simulate how I created the nets on the protoboard).
+
+![Wiring diagram](images/wiring.png)
+
 ## Installation
 
+Standard system update and upgrade;
 ```
-pip install -r requirements.txt
+sudo apt update && sudo apt upgrade
+```
+
+[Install Blinka from Adafruit](https://learn.adafruit.com/circuitpython-on-raspberrypi-linux?view=all);
+```
+sudo apt-get install python3-pip
+sudo pip3 install --upgrade setuptools
+cd ~
+sudo pip3 install --upgrade adafruit-python-shell
+wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+sudo python3 raspi-blinka.py
+```
+
+[Install neopixel package](https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel);
+```
+sudo pip3 install adafruit-circuitpython-neopixel
+```
+
+[Install docker and docker compose](https://devdojo.com/bobbyiliev/how-to-install-docker-and-docker-compose-on-raspberry-pi);
+```
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker ${USER}
+sudo su - ${USER}
+docker version
+docker run hello-world
+sudo apt-get install libffi-dev libssl-dev
+sudo pip3 install docker-compose
+```
+
+[Install requirements with poetry]()
+```
+curl -fsSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -o get-poetry.py
+python3 get-poetry.py
+
 ```
 
 ## Interactive Designer

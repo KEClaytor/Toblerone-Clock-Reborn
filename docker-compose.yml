@@ -3,7 +3,7 @@ version: "3"
 
 services:
   application:
-    image: tclock/app
+    image: clock/app
     # Allow the container to access the hardware
     privileged: true
     ports:

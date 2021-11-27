@@ -2,13 +2,12 @@
 FROM python:3.8
 # Install python dependencies
 WORKDIR /code
-ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
-COPY poetry.lock pyproject.toml /code
-RUN pip install poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --no-interaction --no-dev
-# Install hardware interactions
-RUN pip3 install RPi.GPIO
+# No sense building these packages, they take quite a long time on the zero
+RUN sudo apt install python3-numpy python3-pandas
+# Other python dependnencies
+RUN pip3 install bokeh
+# Hardware interaction
+RUN pip3 install RPi.GPIO adafruit-circuitypython-neopixel
 # Copy and run application
 COPY . /code
 EXPOSE 80

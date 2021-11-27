@@ -26,6 +26,11 @@ Standard system update and upgrade;
 sudo apt update && sudo apt upgrade
 ```
 
+For [`hostname.local` support](https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/);
+```
+sudo apt-get install avahi-daemon
+```
+
 [Install Blinka from Adafruit](https://learn.adafruit.com/circuitpython-on-raspberrypi-linux?view=all);
 ```
 sudo apt-get install python3-pip
@@ -41,7 +46,7 @@ sudo python3 raspi-blinka.py
 sudo pip3 install adafruit-circuitpython-neopixel
 ```
 
-[Install docker and docker compose](https://devdojo.com/bobbyiliev/how-to-install-docker-and-docker-compose-on-raspberry-pi);
+[Install docker and docker-compose](https://devdojo.com/bobbyiliev/how-to-install-docker-and-docker-compose-on-raspberry-pi);
 ```
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
@@ -53,11 +58,16 @@ sudo apt-get install libffi-dev libssl-dev
 sudo pip3 install docker-compose
 ```
 
-[Install requirements with poetry]()
+[Install requirements with poetry](https://python-poetry.org/docs/basic-usage/);
 ```
 curl -fsSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -o get-poetry.py
 python3 get-poetry.py
+poetry install
+```
 
+OR run with docker;
+```
+docker-compose up --build
 ```
 
 ## Interactive Designer

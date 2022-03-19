@@ -1,5 +1,11 @@
+"""The main application
+
+Use `bokeh serve --show` to run.
+"""
 import random
 import datetime
+
+import numpy as np
 
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
@@ -8,12 +14,10 @@ from bokeh.models import TextInput, ColorPicker, Button, RadioButtonGroup, Selec
 from bokeh.io import curdoc
 from bokeh.layouts import column
 from bokeh.events import Tap
-from bokeh.palettes import Turbo256
-
-import numpy as np
 
 import core
 import characters
+import animations
 import pride
 
 # Data
@@ -44,19 +48,19 @@ pride_select = Select(title="Flag", options=list(pride.flags.keys()))
 
 # Plot
 p = figure(plot_width=600, plot_height=400, x_range=(-6, 6), y_range=(-4, 4),)
-
 p.patches(xs="xs", ys="ys", fill_color="colors", source=source)
 
-# Reset the array
 def reset(event):
+    """Clear the display.
+    """
     selected[:] = False
     colors = np.array([""] * len(x0), dtype=object)
     colors[:] = "black"
     source.data["colors"] = colors.tolist()
 
-
-# Switch the colors of the clicked location
-def callback(event):
+def update_callback(event):
+    """Update the colors based on an interaction.
+    """
     colors = np.array(source.data["colors"], dtype=object)
     indx = np.argmin((x0 - event.x) ** 2 + (y0 - event.y) ** 2)
     if tabs.active == 0:
@@ -81,64 +85,74 @@ def callback(event):
     elif tabs.active == 5:
         # ==== Pride Flags ====
         pass
-    # We have to replace the data to refresh the plot
-    # There may be a more efficient "patch" method, but it's not working for me
+    # Write to the ColumnDataSource to update the plot
     source.data["colors"] = colors.tolist()
-
-
-def clock():
-    dt = datetime.datetime.now()
-    if tabs.active == 2:
-        colors = characters.clock(dt.hour, dt.minute, dt.second)
-        source.data["colors"] = colors.tolist()
 
 
 rainbow_index = 0
 raindrops = [(0, 0, 0), (-2, -2, 3), (2, 2, 5)]
-def rainbow():
-    if tabs.active == 3:
+def update_periodic():
+    """Update the display based on a periodic schedule.
+    """
+    global rainbow_index
+    global raindrops
+    if tabs.active == 0:
+        # ==== Index Designer ====
+        pass
+    elif tabs.active == 1:
+        # ==== Color Designer ====
+        pass
+    elif tabs.active == 2:
+        # ==== Clock Mode ====
+        dt = datetime.datetime.now()
+        colors = animations.clock(dt.hour, dt.minute, dt.second)
+    elif tabs.active == 3:
+        # ==== Animations ====
         if animation_radio.active == 0:
-            # RAINBOW
-            global rainbow_index
-            colors = np.array(["black"] * 126, dtype=object)
-            for shift in range(-6, 18, 2):
-                c = Turbo256[(rainbow_index * 2 + shift * 10) % 256]
-                for ii in core.shift(characters.diagonal, shift):
-                    colors[ii] = c
-            source.data["colors"] = colors.tolist()
-            rainbow_index += 1
+            # ==== Rainbow ====
+            colors = animations.rainbow(rainbow_index)
+            rainbow_index += 2
         elif animation_radio.active == 1:
-            # RAINDROPS
-            global raindrops
+            # ==== Raindrops ====
             # Update radius
             raindrops = [(x, y, r + 0.5) for (x, y, r) in raindrops]
-            # Update plot
-            colors = characters.ripple(x0, y0, 215, raindrops)
-            source.data["colors"] = colors
             # Cull large raindrops
-            raindrops = [r for r in raindrops if r[2] < 14]
+            raindrops = [r for r in raindrops if r[2] < 10]
             # Add new raindrops
             if len(raindrops) < 3:
                 x = random.uniform(-6, 6)
                 y = random.uniform(-2.5, 2.5)
                 r = 0
                 raindrops.append((x, y, r))
-            pass
+            # Create the ripples
+            colors = animations.ripple(x0, y0, 215, raindrops)
         elif animation_radio.active == 2:
-            # CHEVRONS
+            # ==== Chevrons ====
             pass
+    elif tabs.active == 4:
+        # ==== Pride Flags ====
+        pass
+    if tabs.active in [2, 3]:
+        source.data["colors"] = colors.tolist()
 
 
-def set_flag(attr, old, new):
+def update_attr(attr, old, new):
+    """Update the display based on a selection.
+    """
     colors = pride.flag(pride_select.value)
+    # Write to the ColumnDataSource to update the plot
     source.data["colors"] = colors.tolist()
 
 
-p.on_event(Tap, callback)
+# Register plot clicks
+p.on_event(Tap, update_callback)
+# Register resets
 char_button.on_click(reset)
 color_button.on_click(reset)
-pride_select.on_change('value', set_flag)
+# Register a flag select
+pride_select.on_change('value', update_attr)
 
+# Add tab layouts
 layout_char = column([char_button, char_text], width=800)
 tab_char_designer = Panel(child=layout_char, title="Index Designer")
 
@@ -151,10 +165,11 @@ tab_animation = Panel(child=column([animation_radio], width=800), title="Animati
 
 tab_pride = Panel(child=column([pride_select], width=800), title="Pride Flags",)
 
+# Add all tabs
 tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], width=800)
 
 layout = column([tabs, p], width=800)
 
-curdoc().add_periodic_callback(clock, 100)
-curdoc().add_periodic_callback(rainbow, 100)
+# Add periodic (eg; time-based) callbacks
+curdoc().add_periodic_callback(update_periodic, 200)
 curdoc().add_root(layout)

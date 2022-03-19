@@ -139,21 +139,21 @@ char_button.on_click(reset)
 color_button.on_click(reset)
 pride_select.on_change('value', set_flag)
 
-layout_char = column([char_button, char_text])
+layout_char = column([char_button, char_text], width=800)
 tab_char_designer = Panel(child=layout_char, title="Index Designer")
 
-layout_color = column([color_button, color_text, color_picker])
+layout_color = column([color_button, color_text, color_picker], width=800)
 tab_color_designer = Panel(child=layout_color, title="Color Designer")
 
-tab_timer_demo = Panel(child=column([]), title="Clock Demo")
+tab_timer_demo = Panel(child=column([], width=800), title="Clock Demo")
 
-tab_animation = Panel(child=column([animation_radio]), title="Animations")
+tab_animation = Panel(child=column([animation_radio], width=800), title="Animations")
 
-tab_pride = Panel(child=column([pride_select]), title="Pride Flags")
+tab_pride = Panel(child=column([pride_select], width=800), title="Pride Flags",)
 
-tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], max_width=1200)
+tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], width=800)
 
-layout = column([tabs, p])
+layout = column([tabs, p], width=800)
 
 curdoc().add_periodic_callback(clock, 100)
 curdoc().add_periodic_callback(rainbow, 100)

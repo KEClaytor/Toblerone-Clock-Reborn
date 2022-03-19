@@ -1,34 +1,36 @@
+"""Patterns for Pride (LGBTQ+) flags for the extended layout.
+
+
+Flag colors from:
+    General
+        https://www.schemecolor.com/lgbt-flag-colors.php
+    Sexual Orientation
+        https://www.schemecolor.com/new-lesbian-flag-colors.php
+        https://www.schemecolor.com/bisexuality-flag-colors.php
+        https://www.schemecolor.com/pansexuality-flag-colors.php
+        https://www.schemecolor.com/asexual-pride-flag-colors.php
+        https://www.schemecolor.com/demisexual-flag-colors.php
+    Gender Identity
+        https://www.schemecolor.com/cisgender-flag-colors.php
+        https://www.schemecolor.com/transgender-pride-flag-colors.php
+        https://www.schemecolor.com/non-binary-gender-flag-colors.php
+        https://www.schemecolor.com/polygender-flag-colors.php
+        https://www.schemecolor.com/genderfluidity-pride-flag-colors.php
+        https://www.schemecolor.com/agender-pride-flag-colors.php
+    Intersex
+        https://www.schemecolor.com/intersex-flag-colors.php
+    Aro/Ace
+        https://www.schemecolor.com/aromantic-flag-colors.php
+"""
+
 import numpy as np
 
-from bokeh.colors import HSL
-
 import core
-
-# Flag colors from:
-# General
-# https://www.schemecolor.com/lgbt-flag-colors.php
-# Sexual Orientation
-# https://www.schemecolor.com/old-lesbian-flag-colors-lipstick.php
-# https://www.schemecolor.com/new-lesbian-flag-colors.php
-# https://www.schemecolor.com/bisexuality-flag-colors.php
-# https://www.schemecolor.com/pansexuality-flag-colors.php
-# https://www.schemecolor.com/asexual-pride-flag-colors.php
-# https://www.schemecolor.com/demisexual-flag-colors.php
-# Gender Identity
-# https://www.schemecolor.com/cisgender-flag-colors.php
-# https://www.schemecolor.com/transgender-pride-flag-colors.php
-# https://www.schemecolor.com/non-binary-gender-flag-colors.php
-# https://www.schemecolor.com/polygender-flag-colors.php
-# https://www.schemecolor.com/genderfluidity-pride-flag-colors.php
-# https://www.schemecolor.com/agender-pride-flag-colors.php
-# Sex
-# https://www.schemecolor.com/intersex-flag-colors.php
-# Other
-# https://www.schemecolor.com/aromantic-flag-colors.php
 
 import core
 import characters
 
+# Convience dictionary that maps colors to rows/chevrons
 flags = {
     # flag_name: [(color, pattern), ...]
     # General
@@ -54,14 +56,6 @@ flags = {
         ("#000000", "chevron4"),
     ],
     # Sexual Orientation
-    "lesbian-old": [
-        ("#A60061", "row0"),
-        ("#B95594", "row1"),
-        ("#D162A8", "row2"),
-        ("#E5ADD1", "row3"),
-        ("#C64D53", "row4"),
-        ("#8C1801", "row5"),
-    ],
     "lesbian": [
         ("#D62900", "row0"), # Extra
         ("#D62900", "row1"),
@@ -177,6 +171,7 @@ flags = {
     ],
 }
 
+# Core patterns
 patterns = {
     # name: (character, shift)
     "row0": (characters.row_0, 0),
@@ -194,7 +189,7 @@ patterns = {
 
 
 def flag(flag_name):
-    """Create a flag
+    """Create a pride flag for display.
     """
     colors = np.array(["#000000"] * 126, dtype=object)
     for color, p in flags[flag_name]:

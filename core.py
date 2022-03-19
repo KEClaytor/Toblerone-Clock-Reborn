@@ -2,6 +2,11 @@ import numpy as np
 
 
 def tri_coords(a, x0, y0, up):
+    """Create coordinates for a triangle
+    a           = side length
+    (x0, y0)    = Center of triangle
+    up          = direction of triangle
+    """
     h = a * np.sqrt(3) / 2
     if up:
         x = np.array([-1 / 2, 1 / 2, 0]) + x0
@@ -13,6 +18,11 @@ def tri_coords(a, x0, y0, up):
 
 
 def row(a, n_row, height):
+    """Create (x, y) coordinates for a row of triangles.
+    a       = side length
+    n_row   = number of triangles in this row
+    height  = 
+    """
     h = a * np.sqrt(3) / 2
     xi = np.arange(n_row)
     x = (xi - n_row // 2) * a / 2
@@ -27,6 +37,8 @@ def row(a, n_row, height):
 
 
 def classic(a=1):
+    """Create the classic (mkI) layout.
+    """
     x0, y0 = [], []
     xs, ys = [], []
     px_per_row = [5, 7, 7, 5]
@@ -44,6 +56,8 @@ def classic(a=1):
 
 
 def extended(a=1):
+    """Create the extended (mkII) layout.
+    """
     x0, y0 = [], []
     xs, ys = [], []
     px_per_row = [19, 21, 23, 23, 21, 19]
@@ -61,6 +75,8 @@ def extended(a=1):
 
 
 def shift(values, shift):
+    """Shift a layout of values left/right in the extended layout.
+    """
     px_per_row = [0, 19, 21, 23, 23, 21, 19]
     px_cumsum = np.cumsum(np.array(px_per_row))
     new_values = []

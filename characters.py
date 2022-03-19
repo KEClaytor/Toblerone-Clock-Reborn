@@ -1,6 +1,8 @@
+import colorsys
+
 import numpy as np
 
-from bokeh.colors import HSL
+from bokeh.colors import RGB
 
 import core
 
@@ -69,8 +71,10 @@ def ripple(x0, y0, hue, ripples):
     hue is the ripple hue
     ripples is a (x, y, r) tuple of the ripple center (x, y) and radius (r)
     """
-    colors = [HSL(hue, 1, 0)] * len(x0)
+    # Zero out all colors
+    colors = [RGB(*colorsys.hls_to_rgb(hue, 0, 255))] * len(x0)
     for x, y, r in ripples:
+        print("Ripple:", x, y, r)
         for ii, (xi, yi) in enumerate(zip(x0, y0)):
             ri = np.sqrt((xi - x)**2 + (yi - y)**2)
             delta_r = 2 - np.abs(r - ri)
@@ -80,5 +84,6 @@ def ripple(x0, y0, hue, ripples):
             # __/    \__|__/    \__
             if delta_r < 0:
                 delta_r = 0
+            # Set ripple color
             colors[ii] = colors[ii].lighten(delta_r * 0.15)
-    return [c.to_rgb().to_hex() for c in colors]
+    return [c.to_hex() for c in colors]

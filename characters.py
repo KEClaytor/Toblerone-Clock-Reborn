@@ -1,3 +1,8 @@
+"""Characters
+
+Contains dictionaries for the extended layout for characters and patterns.
+"""
+
 import colorsys
 
 import numpy as np
@@ -6,6 +11,7 @@ from bokeh.colors import RGB
 
 import core
 
+# Numeric digits
 digits = {
     0: [0, 1, 2, 3, 4, 19, 20, 24, 25, 41, 47, 64, 70, 86, 87, 91, 92, 107, 108, 109, 110, 111],
     1: [2, 3, 22, 23, 44, 45, 67, 68, 89, 90, 109, 110],
@@ -19,13 +25,16 @@ digits = {
     9: [0, 1, 2, 3, 4, 19, 20, 24, 25, 41, 42, 43, 44, 45, 46, 47, 68, 69, 89, 90, 108, 109],
 }
 
+# Edge elements for updating the hours
 hour_index = [1, 0, 20, 19, 41, 40, 63, 64, 86, 87, 107, 108,
 17, 18, 38, 39, 61, 62, 85, 84, 106, 105, 125, 124]
 
+# Patterns
 diagonal = [6, 7, 25, 26, 46, 47, 68, 69, 89, 90, 108, 109]
 chevron_right = [1, 2, 22, 23, 45, 46, 68, 69, 89, 90, 108, 109]
 chevron_left = [0, 1, 19, 20, 40, 41, 63, 64, 86, 87, 107, 108]
 
+# Rows
 row_0 = list(range(19))
 row_1 = list(range(19, 40))
 row_2 = list(range(40, 63))
@@ -35,6 +44,8 @@ row_5 = list(range(107, 126))
 
 
 def clock(h, m, s):
+    """Create the clock layout.
+    """
     selected = np.zeros((126,), dtype=bool)
     colors = np.array(["black"] * 126, dtype=object)
     

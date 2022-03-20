@@ -19,6 +19,7 @@ import core
 import characters
 import animations
 import pride
+import hardware
 
 # Data
 (x0, y0, xs, ys) = core.extended()
@@ -50,13 +51,39 @@ pride_select = Select(title="Flag", options=list(pride.flags.keys()))
 p = figure(plot_width=600, plot_height=400, x_range=(-6, 6), y_range=(-4, 4),)
 p.patches(xs="xs", ys="ys", fill_color="colors", source=source)
 
+
+def write_ui(color_list):
+    """Takes an RGB color list and writes it to the bokeh UI.
+    """
+    # Write to the ColumnDataSource to update the plot
+    source.data["colors"] = color_list.tolist()
+
+
+def write_hardware(color_list):
+    """Takes an RGB color list and writes it to hardware.
+    """
+    if hardware.pixels:
+        # Write each pixel according to the hardware index
+        for ii in range(hardware.num_pixels):
+            index = characters.hw_order[ii]
+            color = hardware.hex_to_rgb(color_list[ii])
+            hardware.pixels[index] = color
+        # Write to the pixels
+        hardware.pixels.show()
+
+
+def write(colors):
+    write_ui(colors)
+    write_hardware(colors)
+
+
 def reset(event):
     """Clear the display.
     """
     selected[:] = False
-    colors = np.array([""] * len(x0), dtype=object)
-    colors[:] = "black"
-    source.data["colors"] = colors.tolist()
+    colors = np.array([characters.COLOR_BLACK] * len(x0), dtype=object)
+    write(colors)
+
 
 def update_callback(event):
     """Update the colors based on an interaction.
@@ -66,8 +93,8 @@ def update_callback(event):
     if tabs.active == 0:
         # ==== Index Designer ====
         selected[indx] = not selected[indx]
-        colors[~selected] = "black"
-        colors[selected] = "orange"
+        colors[~selected] = characters.COLOR_BLACK
+        colors[selected] = characters.COLOR_ORANGE
         # Update the UI
         char_text.value = str(np.where(selected)[0].tolist())
     elif tabs.active == 1:
@@ -85,8 +112,7 @@ def update_callback(event):
     elif tabs.active == 5:
         # ==== Pride Flags ====
         pass
-    # Write to the ColumnDataSource to update the plot
-    source.data["colors"] = colors.tolist()
+    write(colors)
 
 
 rainbow_index = 0
@@ -133,15 +159,14 @@ def update_periodic():
         # ==== Pride Flags ====
         pass
     if tabs.active in [2, 3]:
-        source.data["colors"] = colors.tolist()
+        write(colors)
 
 
 def update_attr(attr, old, new):
     """Update the display based on a selection.
     """
     colors = pride.flag(pride_select.value)
-    # Write to the ColumnDataSource to update the plot
-    source.data["colors"] = colors.tolist()
+    write(colors)
 
 
 # Register plot clicks

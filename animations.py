@@ -3,7 +3,6 @@
 Repeatedly call each function for a new frame of the animation.
 """
 
-import random
 import colorsys
 
 import numpy as np
@@ -22,12 +21,12 @@ def clock(h, m, s):
     """Return color list for the clock.
     """
     selected = np.zeros((126,), dtype=bool)
-    colors = np.array(["black"] * 126, dtype=object)
+    colors = np.array([characters.COLOR_BLACK] * 126, dtype=object)
     
     # Hours - fill the edges
     for ii, indx in enumerate(hour_index):
         if ii <= h:
-            colors[indx] = "green"
+            colors[indx] = characters.COLOR_GREEN
     # Prevent second dots from entering hour triangles
     selected[hour_index] = True
     
@@ -35,17 +34,17 @@ def clock(h, m, s):
     m_tens = m // 10
     m_ones = m % 10
     for ii in core.shift(characters.digits[m_tens], 2):
-        colors[ii] = "orange"
+        colors[ii] = characters.COLOR_ORANGE
         selected[ii] = True
     for ii in core.shift(characters.digits[m_ones], 10):
-        colors[ii] = "orange"
+        colors[ii] = characters.COLOR_ORANGE
         selected[ii] = True
 
     # Seconds - fill in the remaining space
     for ii in range(s):
         available = np.where(~selected)[0]
         indx = available[np.random.randint(len(available))]
-        colors[indx] = "blue"
+        colors[indx] = characters.COLOR_BLUE
         selected[indx] = True
 
     return colors
@@ -67,7 +66,7 @@ def rainbow(offset):
     """Return color list for the current rainbow iteration.
     """
     # Set hue, max saturation, but zero luminosity
-    colors = np.array(["black"] * 126, dtype=object)
+    colors = np.array([characters.COLOR_BLACK] * 126, dtype=object)
     for shift in range(-6, 18, 2):
         # There are 12 diagonal slashes cycle through all colors in them
         hue = (shift * 15 + offset) % 360

@@ -29,3 +29,13 @@ row_2 = list(range(40, 63))
 row_3 = list(range(63, 86))
 row_4 = list(range(86, 107))
 row_5 = list(range(107, 126))
+
+# Hardware pixel order
+# Every other row is reversed
+hw_order = row_0 + list(reversed(row_1)) + row_2 + list(reversed(row_3)) + row_4 + list(reversed(row_5))
+
+# Some color constants
+COLOR_BLACK = "#000000"
+COLOR_ORANGE = "#FFA500"
+COLOR_BLUE = "#0000FF"
+COLOR_GREEN = "#008000"

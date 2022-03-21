@@ -184,11 +184,11 @@ tab_char_designer = Panel(child=layout_char, title="Index Designer")
 layout_color = column([color_button, color_text, color_picker], width=800)
 tab_color_designer = Panel(child=layout_color, title="Color Designer")
 
-tab_timer_demo = Panel(child=column([], width=800), title="Clock Demo")
+tab_timer_demo = Panel(child=column([], width=800), title="Clock")
 
 tab_animation = Panel(child=column([animation_radio], width=800), title="Animations")
 
-tab_pride = Panel(child=column([pride_select], width=800), title="Pride Flags",)
+tab_pride = Panel(child=column([pride_select], width=800), title="Pride",)
 
 # Add all tabs
 tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], width=800)

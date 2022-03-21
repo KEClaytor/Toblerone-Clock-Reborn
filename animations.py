@@ -25,8 +25,8 @@ def clock(h, m, s):
     
     # Hours - fill the edges
     for ii, indx in enumerate(hour_index):
-        if ii <= h:
-            colors[indx] = characters.COLOR_GREEN
+        if ii < h:
+            colors[indx] = characters.COLOR_WHITE
     # Prevent second dots from entering hour triangles
     selected[hour_index] = True
     
@@ -43,9 +43,10 @@ def clock(h, m, s):
     # Seconds - fill in the remaining space
     for ii in range(s):
         available = np.where(~selected)[0]
-        indx = available[np.random.randint(len(available))]
-        colors[indx] = characters.COLOR_BLUE
-        selected[indx] = True
+        if len(available):
+            indx = available[np.random.randint(len(available))]
+            colors[indx] = characters.COLOR_BLUE
+            selected[indx] = True
 
     return colors
 

@@ -57,6 +57,13 @@ def clamp(value, minimum=0, maximum=1):
     return max(minimum, min(value, maximum))
 
 
+def shift_luminosity(hls, value):
+    """Shift the luminosity of a hls color.
+    """
+    h, l, s = hls
+    return (h, clamp(l + value), s)
+
+
 def rgb_to_hex(r, g, b):
     """Convert an RGB tuple (0, 1) bound to a hex color.
     """
@@ -84,9 +91,6 @@ def ripple(x0, y0, hue, ripples):
     hue is the ripple hue
     ripples is a (x, y, r) tuple of the ripple center (x, y) and radius (r)
     """
-    def shift_luminosity(hls, value):
-        h, l, s = hls
-        return (h, clamp(l + value), s)
 
     # Set hue, max saturation, but zero luminosity
     hls = [(hue/360, 0, 1)] * len(x0)
@@ -102,6 +106,24 @@ def ripple(x0, y0, hue, ripples):
                 delta_r = 0
             # Lighten this pixel (allows ripples to add)
             hls[ii] = shift_luminosity(hls[ii], delta_r / 6)
+    # Convert HLS to RGB
+    rgb = [colorsys.hls_to_rgb(*ci) for ci in hls]
+    # Convert RGB to HEX
+    hex = [rgb_to_hex(*ci) for ci in rgb]
+    return np.array(hex)
+
+
+def chevron_right_fade(shift, hue):
+    """Three right chevrons that fade out.
+    """
+    hls0 = (hue/360, 0.5, 1)
+    hls1 = (hue/360, 0.25, 1)
+    hls2 = (hue/360, 0.15, 1)
+    colors = np.array([(0, 0, 0)] * 126, dtype=object)
+    colors[core.shift(characters.chevron_right, shift)] = [hls0]
+    colors[core.shift(characters.chevron_right, shift-2)] = [hls1]
+    colors[core.shift(characters.chevron_right, shift-4)] = [hls2]
+    hls = colors.tolist()
     # Convert HLS to RGB
     rgb = [colorsys.hls_to_rgb(*ci) for ci in hls]
     # Convert RGB to HEX

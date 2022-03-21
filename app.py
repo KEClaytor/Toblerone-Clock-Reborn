@@ -117,11 +117,11 @@ def update_callback(event):
 
 rainbow_index = 0
 raindrops = [(0, 0, 0), (-2, -2, 3), (2, 2, 5)]
+chevron_index = 0
+chevron_hue = random.randint(0, 360)
 def update_periodic():
     """Update the display based on a periodic schedule.
     """
-    global rainbow_index
-    global raindrops
     if tabs.active == 0:
         # ==== Index Designer ====
         pass
@@ -136,10 +136,12 @@ def update_periodic():
         # ==== Animations ====
         if animation_radio.active == 0:
             # ==== Rainbow ====
+            global rainbow_index
             colors = animations.rainbow(rainbow_index)
             rainbow_index += 2
         elif animation_radio.active == 1:
             # ==== Raindrops ====
+            global raindrops
             # Update radius
             raindrops = [(x, y, r + 0.5) for (x, y, r) in raindrops]
             # Cull large raindrops
@@ -154,7 +156,21 @@ def update_periodic():
             colors = animations.ripple(x0, y0, 215, raindrops)
         elif animation_radio.active == 2:
             # ==== Chevrons ====
-            pass
+            # Chevrons move from -8 to +22
+            # We map the index [0, 100] to [-8, 22]
+            # We also only want even shift values
+            global chevron_index
+            global chevron_hue
+            max_index = 30
+            if chevron_index > max_index:
+                chevron_hue = random.randint(0, 360)
+                chevron_index = 0
+            else:
+                chevron_index += 1
+            shift = int((chevron_index / max_index) * 30 - 8)
+            if shift % 2 != 0:
+                shift += 1
+            colors = animations.chevron_right_fade(shift, chevron_hue)
     elif tabs.active == 4:
         # ==== Pride Flags ====
         pass

@@ -24,7 +24,7 @@ import hardware
 # Data
 (x0, y0, xs, ys) = core.extended()
 source = ColumnDataSource(
-    data={"x0": x0, "y0": y0, "xs": xs, "ys": ys, "colors": ["black"] * len(x0)}
+    data={"x0": x0, "y0": y0, "xs": xs, "ys": ys, "colors": ["#000000"] * len(x0)}
 )
 x0 = np.array(x0)
 xs = np.array(xs)

@@ -1,6 +1,5 @@
 """Patterns for Pride (LGBTQ+) flags for the extended layout.
 
-
 Flag colors from:
     General
         https://www.schemecolor.com/lgbt-flag-colors.php
@@ -30,7 +29,7 @@ import core
 import core
 import characters
 
-# Convience dictionary that maps colors to rows/chevrons
+# Convenience dictionary that maps colors to rows/chevrons
 flags = {
     # flag_name: [(color, pattern), ...]
     # General
@@ -48,7 +47,7 @@ flags = {
         ("#FFFF41", "row2"),
         ("#008018", "row3"),
         ("#0000F9", "row4"),
-        ("#86007D", "row5"), 
+        ("#86007D", "row5"),
         ("#FFFFFF", "chevron0"),
         ("#F7A8B8", "chevron1"),
         ("#55CDFC", "chevron2"),
@@ -57,7 +56,7 @@ flags = {
     ],
     # Sexual Orientation
     "lesbian": [
-        ("#D62900", "row0"), # Extra
+        ("#D62900", "row0"),  # Extra
         ("#D62900", "row1"),
         ("#FF9B55", "row2"),
         ("#FFFFFF", "row3"),
@@ -81,17 +80,17 @@ flags = {
         ("#1BB3FF", "row5"),
     ],
     "asexual": [
-        ("#000000", "row0"), # Extra
+        ("#000000", "row0"),  # Extra
         ("#000000", "row1"),
         ("#A4A4A4", "row2"),
         ("#FFFFFF", "row3"),
         ("#810081", "row4"),
-        ("#810081", "row5"), # Extra
+        ("#810081", "row5"),  # Extra
     ],
     "demisexual": [
         ("#FFFFFF", "row0"),
         ("#FFFFFF", "row1"),
-        ("#810081", "row2"), # Extra
+        ("#810081", "row2"),  # Extra
         ("#810081", "row3"),
         ("#A4A4A4", "row4"),
         ("#A4A4A4", "row5"),
@@ -113,21 +112,21 @@ flags = {
     "transgender": [
         ("#55CDFC", "row0"),
         ("#F7A8B8", "row1"),
-        ("#FFFFFF", "row2"), # Extra
+        ("#FFFFFF", "row2"),  # Extra
         ("#FFFFFF", "row3"),
         ("#F7A8B8", "row4"),
         ("#55CDFC", "row5"),
     ],
     "nonbinary": [
-        ("#FFF430", "row0"), # Extra
+        ("#FFF430", "row0"),  # Extra
         ("#FFF430", "row1"),
         ("#FFFFFF", "row2"),
         ("#9C59D1", "row3"),
         ("#000000", "row4"),
-        ("#000000", "row5"), # Extra
+        ("#000000", "row5"),  # Extra
     ],
     "polygender": [
-        ("#000000", "row0"), # Extra
+        ("#000000", "row0"),  # Extra
         ("#939393", "row1"),
         ("#EC95C5", "row2"),
         ("#F5ED80", "row3"),
@@ -135,7 +134,7 @@ flags = {
         ("#000000", "row5"),
     ],
     "genderfluid": [
-        ("#000000", "row0"), # Extra
+        ("#000000", "row0"),  # Extra
         ("#FF76A4", "row1"),
         ("#FFFFFF", "row2"),
         ("#C011D7", "row3"),
@@ -158,7 +157,7 @@ flags = {
         ("#FFDA00", "row2"),
         ("#7A00AC", "row3"),
         ("#7A00AC", "row4"),
-        ("#7A00AC", "row5"), # Extra
+        ("#7A00AC", "row5"),  # Extra
     ],
     # Other
     "aromantic": [
@@ -167,7 +166,7 @@ flags = {
         ("#FFFFFF", "row2"),
         ("#AAAAAA", "row3"),
         ("#000000", "row4"),
-        ("#000000", "row5"), # Extra
+        ("#000000", "row5"),  # Extra
     ],
 }
 

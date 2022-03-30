@@ -83,6 +83,6 @@ def shift(values, shift):
     for v in values:
         row = np.where(v < px_cumsum)[0][0]
         v2 = v + shift
-        if px_cumsum[row-1] <= v2 < px_cumsum[row]:
+        if px_cumsum[row - 1] <= v2 < px_cumsum[row]:
             new_values.append(v2)
     return new_values

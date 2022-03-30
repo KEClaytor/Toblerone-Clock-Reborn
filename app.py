@@ -42,7 +42,9 @@ color_text = TextInput(value="[]", title="Colors:")
 color_picker = ColorPicker(title="Color")
 
 # UI elements - Animation page
-animation_radio = RadioButtonGroup(labels=["rainbow", "raindrops", "chevrons"], active=0)
+animation_radio = RadioButtonGroup(
+    labels=["rainbow", "raindrops", "chevrons"], active=0
+)
 
 # UI elements - Pride page
 pride_select = Select(title="Flag", options=list(pride.flags.keys()))
@@ -65,7 +67,7 @@ def write_hardware(color_list):
     if hardware.pixels:
         # Write each pixel according to the hardware index
         for ii in range(hardware.num_pixels):
-            index = characters.hw_order[ii]
+            index = hardware.pixel_index_map[ii]
             color = hardware.hex_to_rgb(color_list[ii])
             hardware.pixels[index] = color
         # Write to the pixels
@@ -119,9 +121,12 @@ rainbow_index = 0
 raindrops = [(0, 0, 0), (-2, -2, 3), (2, 2, 5)]
 chevron_index = 0
 chevron_hue = random.randint(0, 360)
+
+
 def update_periodic():
     """Update the display based on a periodic schedule.
     """
+    colors = None
     if tabs.active == 0:
         # ==== Index Designer ====
         pass
@@ -174,7 +179,7 @@ def update_periodic():
     elif tabs.active == 4:
         # ==== Pride Flags ====
         pass
-    if tabs.active in [2, 3]:
+    if colors is not None:
         write(colors)
 
 
@@ -191,7 +196,7 @@ p.on_event(Tap, update_callback)
 char_button.on_click(reset)
 color_button.on_click(reset)
 # Register a flag select
-pride_select.on_change('value', update_attr)
+pride_select.on_change("value", update_attr)
 
 # Add tab layouts
 layout_char = column([char_button, char_text], width=800)
@@ -207,7 +212,16 @@ tab_animation = Panel(child=column([animation_radio], width=800), title="Animati
 tab_pride = Panel(child=column([pride_select], width=800), title="Pride",)
 
 # Add all tabs
-tabs = Tabs(tabs=[tab_char_designer, tab_color_designer, tab_timer_demo, tab_animation, tab_pride], width=800)
+tabs = Tabs(
+    tabs=[
+        tab_char_designer,
+        tab_color_designer,
+        tab_timer_demo,
+        tab_animation,
+        tab_pride,
+    ],
+    width=800,
+)
 
 layout = column([tabs, p], width=800)
 

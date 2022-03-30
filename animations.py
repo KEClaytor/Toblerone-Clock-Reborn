@@ -13,8 +13,32 @@ import core
 import characters
 
 # Edge elements for updating the hours
-hour_index = [1, 0, 20, 19, 41, 40, 63, 64, 86, 87, 107, 108,
-17, 18, 38, 39, 61, 62, 85, 84, 106, 105, 125, 124]
+hour_index = [
+    1,
+    0,
+    20,
+    19,
+    41,
+    40,
+    63,
+    64,
+    86,
+    87,
+    107,
+    108,
+    17,
+    18,
+    38,
+    39,
+    61,
+    62,
+    85,
+    84,
+    106,
+    105,
+    125,
+    124,
+]
 
 
 def clock(h, m, s):
@@ -22,14 +46,14 @@ def clock(h, m, s):
     """
     selected = np.zeros((126,), dtype=bool)
     colors = np.array([characters.COLOR_BLACK] * 126, dtype=object)
-    
+
     # Hours - fill the edges
     for ii, indx in enumerate(hour_index):
         if ii < h:
             colors[indx] = characters.COLOR_WHITE
     # Prevent second dots from entering hour triangles
     selected[hour_index] = True
-    
+
     # Minutes - numbers in the middle
     m_tens = m // 10
     m_ones = m % 10
@@ -78,7 +102,7 @@ def rainbow(offset):
     for shift in range(-6, 18, 2):
         # There are 12 diagonal slashes cycle through all colors in them
         hue = (shift * 15 + offset) % 360
-        hls = (hue/360, 0.5, 1)
+        hls = (hue / 360, 0.5, 1)
         hex = rgb_to_hex(*colorsys.hls_to_rgb(*hls))
         for ii in core.shift(characters.diagonal, shift):
             colors[ii] = hex
@@ -93,10 +117,10 @@ def ripple(x0, y0, hue, ripples):
     """
 
     # Set hue, max saturation, but zero luminosity
-    hls = [(hue/360, 0, 1)] * len(x0)
+    hls = [(hue / 360, 0, 1)] * len(x0)
     for x, y, r in ripples:
         for ii, (xi, yi) in enumerate(zip(x0, y0)):
-            ri = np.sqrt((xi - x)**2 + (yi - y)**2)
+            ri = np.sqrt((xi - x) ** 2 + (yi - y) ** 2)
             delta_r = 2 - np.abs(r - ri)
             # Fall off to zero at a range of 2 from the ripple radius
             #     /\         /\
@@ -116,13 +140,13 @@ def ripple(x0, y0, hue, ripples):
 def chevron_right_fade(shift, hue):
     """Three right chevrons that fade out.
     """
-    hls0 = (hue/360, 0.5, 1)
-    hls1 = (hue/360, 0.25, 1)
-    hls2 = (hue/360, 0.15, 1)
+    hls0 = (hue / 360, 0.5, 1)
+    hls1 = (hue / 360, 0.25, 1)
+    hls2 = (hue / 360, 0.15, 1)
     colors = np.array([(0, 0, 0)] * 126, dtype=object)
-    colors[core.shift(characters.chevron_right, shift)] = [hls0]
-    colors[core.shift(characters.chevron_right, shift-2)] = [hls1]
-    colors[core.shift(characters.chevron_right, shift-4)] = [hls2]
+    colors[core.shift(characters.chevron_right, shift - 0)] = [hls0]
+    colors[core.shift(characters.chevron_right, shift - 2)] = [hls1]
+    colors[core.shift(characters.chevron_right, shift - 4)] = [hls2]
     hls = colors.tolist()
     # Convert HLS to RGB
     rgb = [colorsys.hls_to_rgb(*ci) for ci in hls]

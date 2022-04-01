@@ -3,6 +3,8 @@
 Contains dictionaries for the extended layout for characters and patterns.
 """
 
+num_pixels = 126
+
 # Numeric digits
 digits = {
     0: [

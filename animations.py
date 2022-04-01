@@ -4,6 +4,7 @@ Repeatedly call each function for a new frame of the animation.
 """
 
 import colorsys
+import datetime
 
 import numpy as np
 
@@ -13,63 +14,40 @@ import core
 import characters
 
 # Edge elements for updating the hours
-hour_index = [
-    1,
-    0,
-    20,
-    19,
-    41,
-    40,
-    63,
-    64,
-    86,
-    87,
-    107,
-    108,
-    17,
-    18,
-    38,
-    39,
-    61,
-    62,
-    85,
-    84,
-    106,
-    105,
-    125,
-    124,
-]
+hour_index = characters.chevron_left + core.shift(characters.chevron_right, 16)
+clock_colors = (characters.COLOR_WHITE, characters.COLOR_ORANGE, characters.COLOR_BLUE)
 
-
-def clock(h, m, s):
-    """Return color list for the clock.
+def clock_face(dt, colors=clock_colors):
+    """Return the color list for a given datetime.
     """
-    selected = np.zeros((126,), dtype=bool)
-    colors = np.array([characters.COLOR_BLACK] * 126, dtype=object)
+    H, M, S = dt.hour, dt.minute, dt.second
+    COL_H, COL_M, COL_S = clock_colors
+    selected = np.zeros((characters.num_pixels,), dtype=bool)
+    colors = [characters.COLOR_BLACK] * characters.num_pixels
 
     # Hours - fill the edges
     for ii, indx in enumerate(hour_index):
-        if ii < h:
-            colors[indx] = characters.COLOR_WHITE
+        if ii < H:
+            colors[indx] = COL_H
     # Prevent second dots from entering hour triangles
     selected[hour_index] = True
 
     # Minutes - numbers in the middle
-    m_tens = m // 10
-    m_ones = m % 10
+    m_tens = M // 10
+    m_ones = M % 10
     for ii in core.shift(characters.digits[m_tens], 2):
-        colors[ii] = characters.COLOR_ORANGE
+        colors[ii] = COL_M
         selected[ii] = True
     for ii in core.shift(characters.digits[m_ones], 10):
-        colors[ii] = characters.COLOR_ORANGE
+        colors[ii] = COL_M
         selected[ii] = True
 
     # Seconds - fill in the remaining space
-    for ii in range(s):
+    for ii in range(S):
         available = np.where(~selected)[0]
         if len(available):
             indx = available[np.random.randint(len(available))]
-            colors[indx] = characters.COLOR_BLUE
+            colors[indx] = COL_S
             selected[indx] = True
 
     return colors
@@ -98,15 +76,15 @@ def rainbow(offset):
     """Return color list for the current rainbow iteration.
     """
     # Set hue, max saturation, but zero luminosity
-    colors = np.array([characters.COLOR_BLACK] * 126, dtype=object)
+    colors = [characters.COLOR_BLACK] * 126
+    # There are 12 diagonal slashes cycle through all colors in them
     for shift in range(-6, 18, 2):
-        # There are 12 diagonal slashes cycle through all colors in them
         hue = (shift * 15 + offset) % 360
         hls = (hue / 360, 0.5, 1)
         hex = rgb_to_hex(*colorsys.hls_to_rgb(*hls))
         for ii in core.shift(characters.diagonal, shift):
             colors[ii] = hex
-    return np.array(colors)
+    return colors
 
 
 def ripple(x0, y0, hue, ripples):
@@ -135,6 +113,12 @@ def ripple(x0, y0, hue, ripples):
     # Convert RGB to HEX
     hex = [rgb_to_hex(*ci) for ci in rgb]
     return np.array(hex)
+
+
+# def raindrops(n_raindrops=3):
+#     rainbow_index = 0
+#     raindrops = [(0, 0, 0), (-2, -2, 3), (2, 2, 5)]
+#     yield ripple()
 
 
 def chevron_right_fade(shift, hue):
